@@ -1,0 +1,838 @@
+/*==========================
+  Base styling
+==========================*/
+body {
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #121212;
+  color: #f0f0f0;
+  box-sizing: border-box;
+}
+
+button,
+select {
+  padding: 0.75rem 1.25rem;
+  margin: 0.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #1f1f1f;
+  color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+button:focus {
+  outline: none;
+}
+
+button:hover,
+select:hover {
+  background-color: #333;
+}
+
+/*==========================
+    Import Screen
+  ==========================*/
+#importScreen {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  padding: 1rem 1rem 5rem;
+  background-color: #121212;
+  box-sizing: border-box;
+}
+
+#importScreen h2 {
+  font-size: 2rem;
+  margin: 0 0 1rem;
+  color: #8989e9;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+#loadOptions {
+  margin-bottom: 1rem;
+}
+
+#importScreen input[type="file"] {
+  max-width: 400px;
+  border: 1px solid #848484;
+  border-radius: 8px;
+  color: #848484;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+#importScreen input[type="file"]:hover {
+  background-color: #333;
+  border-color: #555;
+}
+
+/* add an opacity transition */
+.error-msg {
+  color: #fff;
+  background: #ff6b6b;
+  border: 1px solid #ff6b6b;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  text-align: center;
+
+  /* new: start hidden */
+  opacity: 0;
+  display: none;
+  transition: opacity 0.3s ease;
+}
+
+.top-block {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+#tagFilterContainer {
+  width: 80%;
+  max-width: 400px;
+  margin-top: 1.5rem;
+  min-height: 130px;
+  background-color: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.filter-header label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.filter-header input[type="checkbox"] {
+  transform: scale(1.2);
+}
+
+.filter-header span {
+  font-size: 1rem;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+#tagCheckboxes {
+  display: flex;
+  flex-direction: column;
+  min-height: 100px;
+  max-height: 100px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+#tagCheckboxes label {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+#tagCheckboxes input[type="checkbox"] {
+  margin-right: 0.5rem;
+  transform: scale(1.2);
+}
+
+.import-btn input[type="file"] {
+  display: none;
+}
+
+/* Optional: tweak export button when inactive */
+.export-btn[style*="display:none"] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.import-actions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #1f1f1f;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.import-actions button {
+  width: 100%;
+  padding: 1rem 0;
+  background: none;
+  border: none;
+  color: #f0f0f0;
+  font-size: 1.2rem;
+  cursor: pointer;
+  user-select: none;
+  border-radius: 0;
+}
+
+.import-actions button:first-child {
+  border-right: 1px solid #333;
+}
+
+.import-actions button:hover {
+  background: #333;
+}
+
+/* container for the single “Add Card” hover menu */
+.import-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* parent wrapper: position relative to anchor dropdown */
+.add-card-menu {
+  position: relative;
+}
+
+/* hide dropdown by default */
+.add-card-dropdown {
+  position: absolute;
+  top: 100%; left: 0;
+  display: none;
+  flex-direction: column;
+  background: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 4px;
+  margin-top: 0.25rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  z-index: 10;
+}
+
+/* show when hovering the parent */
+.add-card-menu:hover .add-card-dropdown {
+  display: flex;
+}
+
+/* style dropdown items */
+.add-card-dropdown button {
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+}
+.add-card-dropdown button:hover {
+  background: #333;
+}
+
+/*==========================
+    Review & Study Modals
+  ==========================*/
+#reviewModal,
+#studyModal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 1rem;
+  background-color: #121212;
+  overflow: hidden;
+  z-index: 1000;
+  box-sizing: border-box;
+}
+
+#reviewModal .card,
+#studyModal .card {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+#reviewModal #cameraView,
+#studyModal #studyCameraView {
+  display: none;
+}
+
+/* Card header */
+#reviewModal .card-header,
+#studyModal .card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* tighter gap */
+  background-color: #1f1f1f;
+  border-radius: 8px;
+  /* reduced padding */
+  margin: -0.5rem auto 0;
+  width: fit-content;
+  z-index: 2;
+}
+
+#studyModal .card-header {
+  gap: 0.25rem;
+  padding: 0.15rem 0.4rem;
+}
+
+#studyModal .card-counter-top span,
+#studyModal .lot-counter span {
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+#studyModal .lot-counter button {
+  padding: 0.2rem 0.4rem;
+  font-size: 0.85rem;
+}
+
+/* Review scrollable content */
+#reviewModal .card-content {
+  flex: 5 1 0;
+  overflow-y: auto;
+}
+
+/* Study static content */
+#studyModal .card-content {
+  flex: 5 1 0;
+  overflow: hidden;
+}
+
+/* Pause banner */
+#reviewModal #detectionStatus,
+#studyModal #detectionStatus {
+  display: none;
+  width: 100%;
+  text-align: center;
+  padding: 0.25rem 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 2;
+}
+
+/* Question/Answer/Phrase */
+#reviewModal .question,
+#studyModal .question {
+  font-size: 1.6rem;
+  margin: 0 0 0.25rem;
+  color: #8989e9;
+  text-align: center;
+}
+
+#studyModal .question {
+  font-size: 1rem;
+}
+
+#reviewModal .answer {
+  font-size: 1.5rem;
+  margin: 0.5rem 0;
+  color: #7d9b50;
+  text-align: center;
+}
+
+#studyModal .answer-pair .answer {
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+}
+
+#reviewModal .favourite,
+#studyModal .favourite {
+  font-size: 1.7rem;
+  cursor: pointer;
+  text-align: center;
+}
+
+#reviewModal .phrase,
+#studyModal .phrase {
+  font-size: 1.2rem;
+  margin: 0.25rem 0;
+  color: #bbbbbb;
+  text-align: center;
+}
+
+#studyModal .phrase {
+  font-size: 1rem;
+  max-height: 4rem;
+  overflow-y: auto;
+}
+
+.question-highlight {
+  color: #6ecffc;
+}
+
+/* Study answer‐pair */
+.answer-pair {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.answer-pair .answer {
+  font-size: 1.6rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #555;
+  border-radius: 8px;
+  background: transparent;
+  color: #f0f0f0;
+  cursor: pointer;
+  transition: color 0.2s;
+  width: 80%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.answer-pair .answer:hover {
+  border-color: #777;
+}
+
+.answer.correct.selected {
+  color: #2e7d32 !important;
+}
+
+.answer.incorrect.selected {
+  color: #e57373 !important;
+}
+
+.answer.selected {
+  background: transparent !important;
+  border-color: #333 !important;
+}
+
+/* Lot‐paging controls */
+.lot-counter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 15px;
+}
+
+.lot-counter button {
+  background: none;
+  border: none;
+  color: #f0f0f0;
+  font-size: 1.4rem;
+  padding: 0.25rem;
+}
+
+.lot-counter span {
+  font-size: 1rem;
+  color: #f0f0f0;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  background-color: #1f1f1f;
+  color: #f0f0f0;
+  border: 1px solid #333;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  user-select: none;
+}
+
+/* Hover state */
+.btn:hover {
+  background-color: #333;
+  border-color: #555;
+}
+
+/* Bottom menu (shared) */
+#reviewModal .bottom-menu,
+#studyModal .bottom-menu {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: #1f1f1f;
+  box-sizing: border-box;
+}
+
+#reviewModal .menu-item,
+#studyModal .menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem;
+  height: 4.5rem;
+  /* reduced height */
+  box-sizing: border-box;
+}
+
+#studyModal .menu-item {
+  height: 4.5rem;
+}
+
+#reviewModal .menu-item+.menu-item,
+#studyModal .menu-item+.menu-item {
+  border-left: 1px solid #333;
+}
+
+#reviewModal .menu-item button,
+#studyModal .menu-item button {
+  background: none;
+  border: none;
+  color: #f0f0f0;
+  font-size: 15px;
+  padding: 0.2rem;
+  margin: 0;
+}
+
+#studyModal .menu-item button {
+  font-size: 15px;
+}
+
+#reviewModal .menu-center,
+#studyModal .menu-center {
+  font-size: 15px;
+  margin: 0.25rem 0;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* Modal positioning context */
+.modal {
+  position: relative;
+}
+
+/* Tag pills container */
+.card-tags {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  bottom: 5.5rem;
+  /* raised for smaller menu */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  background-color: #1f1f1f;
+  border-top: 1px solid #333;
+  border-radius: 8px 8px 0 0;
+  max-height: 120px;
+  /* allow ~2 rows */
+  overflow-y: auto;
+  z-index: 5;
+}
+
+.tag-pill {
+  padding: 0.2rem 0.5rem;
+  margin: 0;
+  font-size: 0.8rem;
+  border-radius: 12px;
+  white-space: nowrap;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.tag-pill.selected {
+  background: #8989e9;
+  color: #121212;
+}
+
+/* “Add Tag” pill */
+.tag-pill.add-tag {
+  background: #2a2a2a;
+  color: #7d9b50;
+  border: 1px dashed #7d9b50;
+}
+
+.tag-pill.add-tag:hover {
+  background: #7d9b50;
+  color: #121212;
+  border-color: #7d9b50;
+}
+
+.inline-note {
+  font-size: 0.8rem;
+  color: #ccc;
+  text-align: center;
+  margin-top: 0.25rem;
+}
+
+/* Progress bar container */
+#reviewProgressBar {
+  display: flex;
+  height: 30px;
+  /* same height */
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #333;
+}
+
+/* All segments */
+#reviewProgressBar>div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* default center */
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: flex 0.3s;
+}
+
+/* Reviewed (green): percent, right-aligned */
+#reviewProgressBar .reviewed {
+  background: #2e7d32;
+  justify-content: flex-end;
+  padding-right: 8px;
+  /* give some space before the edge */
+}
+
+/* In-progress (purple): count, centered */
+#reviewProgressBar .in-progress {
+  background: #8989e9;
+  justify-content: center;
+  /* explicit for clarity */
+}
+
+#reviewProgressBar .remaining {
+  background: #444;
+  justify-content: center;
+  /* ensure centered */
+  padding: 0 4px;
+}
+
+/* Style the Add Card button to match theme */
+#importScreen #addCardBtn {
+  background-color: #2a2a2a;
+  color: #7d9b50;
+}
+
+#importScreen #addCardBtn:hover {
+  background-color: #7d9b50;
+  color: #121212;
+}
+
+/* Modal overlay (simple full-screen dark backdrop) */
+#addCardModal.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+/* Inputs in modal inherit your base button/input styling */
+#addCardModal input,
+#addCardModal textarea {
+  background: #1f1f1f;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #f0f0f0;
+  padding: 0.5rem;
+  width: 93%;
+}
+
+/* Make the Save/Cancel buttons match your other modals */
+#addCardModal button {
+  background: #1f1f1f;
+  color: #f0f0f0;
+}
+
+#addCardModal button:hover {
+  background: #333;
+}
+
+/* ── Carousel Card: scrollable & limited height on small screens ───────── */
+#addCardModal .card.add-card {
+  min-height: 93vh;
+  /* never exceed 80% of viewport height */
+  overflow-y: auto;
+  /* internal scrolling if too tall */
+  padding: 1rem;
+  margin: 1rem;
+  background: #1f1f1f;
+  font-size: 1.1rem;
+  /* slightly larger text */
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+/* ── Accordion styling ──────────────────────────────────────────────────── */
+#addCardModal details {
+  border-bottom: 1px solid #333;
+  margin-bottom: 0.5rem;
+}
+
+#addCardModal summary {
+  cursor: pointer;
+  padding: 0.5rem 0;
+  font-weight: bold;
+  list-style: none;
+  color: #f0f0f0;
+}
+
+#addCardModal summary::-webkit-details-marker {
+  display: none;
+  /* hide the native arrow */
+}
+
+#addCardModal details[open] summary {
+  color: #8989e9;
+}
+
+/* ── Inputs/Textareas inside each accordion panel ───────────────────────── */
+#addCardModal .accordion-input {
+  width: 100%;
+  /* override your old width:93% */
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  background: #121212;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #f0f0f0;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+/* ── Tags row: input + pills ───────────────────────────────────────────── */
+#addCardModal .tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin: 0.5rem 0;
+}
+
+#addCardModal .tags-row input[type="text"] {
+  flex: 1 1 auto;
+  width: auto;
+  /* let flex sizing take over */
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #333;
+  background: #1f1f1f;
+  color: #f0f0f0;
+  box-sizing: border-box;
+}
+
+#addCardModal .tags-row button {
+  flex: 0 0 auto;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background: #2a2a2a;
+  color: #7d9b50;
+  border: none;
+  cursor: pointer;
+}
+
+/* ── Sticky Save/Cancel bar ─────────────────────────────────────────────── */
+#addCardModal .modal-actions {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1f1f1f;
+  border-top: 1px solid #333;
+  padding: 0.75rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  box-sizing: border-box;
+}
+
+#addCardModal .modal-actions button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  background: #1f1f1f;
+  color: #f0f0f0;
+  border: none;
+}
+
+#addCardModal .modal-actions button:hover {
+  background: #333;
+}
+
+/* Pills for selecting tags in Add-Card */
+#newTagContainer .tag-pill {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+  border-radius: 12px;
+  background: #2a2a2a;
+  color: #f0f0f0;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+#newTagContainer .tag-pill.selected {
+  background: #8989e9;
+  color: #121212;
+}
+
+/* Add-New-Tag button hover */
+#addNewTagBtn:hover {
+  background: #7d9b50;
+  color: #121212;
+}
+
+#audioToggleBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+#imgImportModal img {
+  max-height: 60vh;
+  object-fit: contain;
+}
+/* ensure modal & card look consistent */
+/* Make the Image-Import Modal full-screen like the Add-Card Modal */
+#imgImportModal.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+/* And make sure its inner .card is vertically scrollable if content overflows */
+#imgImportModal .card {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+
+/* disable buttons lightly */
+.controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

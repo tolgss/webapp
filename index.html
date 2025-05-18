@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>QA Review App 2.0</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css" />
+  <link rel="icon" href="icon.png" type="image/x-icon">
+  <!-- Tesseract.js (OCR) -->
+  <script src="https://unpkg.com/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
+</head>
+
+<body>
+  <div id="importScreen" class="import-screen">
+    <h2>QA Review App</h2>
+    <div class="top-block">
+
+      <div id="loadOptions"></div>
+
+      <!-- Import JSON -->
+      <label class="btn import-btn">
+        📂 Import JSON
+        <input type="file" id="fileInput" accept="application/json, .json, */*" />
+      </label>
+
+      <!-- Export Updated JSON -->
+      <button id="exportBtn" class="btn export-btn" style="display:none;">
+        💾 Export JSON
+      </button>
+    </div>
+    <div id="tagFilterContainer" style="display:none;">
+      <div class="filter-header">
+        <div>Filter by tag(s):</div>
+        <label><input type="checkbox" id="selectAllTags"> All Tags</label>
+      </div>
+      <div id="tagCheckboxes"></div>
+    </div>
+    <div id="importControls" class="import-controls">
+      <div class="add-card-menu">
+        <button id="addCardMenuBtn">➕ Add Card</button>
+        <div class="add-card-dropdown">
+          <button id="addCardTextBtn">📝 Text</button>
+          <button id="importImageBtn">🖼️ Image</button>
+        </div>
+      </div>
+      <div id="cardCount">Total cards: 0</div>
+    </div>
+  </div>
+
+  <div id="filterError" class="error-msg" style="display:none;"></div>
+
+  <div class="import-actions">
+    <button id="startStudyBtn" style="display:none;">Start Study</button>
+    <button id="startReviewBtn" style="display:none;">Start Review</button>
+  </div>
+  </div>
+
+  <!-- Review Modal -->
+  <div id="reviewModal" class="modal" style="display: none;">
+    <!-- Progress Bar -->
+    <div id="reviewProgressBar"></div>
+
+    <div class="card">
+      <!-- Header with counter, Finish & Reset buttons -->
+      <div class="card-header" style="display: flex; justify-content: center; padding-left: 0.5rem; margin-top: 0px">
+        <div class="card-counter-top" style="display: flex; align-items: center; gap: 0.5rem;">
+          <span id="reviewCardCounter">0/20</span>
+          <!-- Finish Batch -->
+          <button id="finishBatchBtn" title="Complete this batch" style="padding:0.25rem 0.5rem;font-size:0.85rem;border-radius:4px;
+                       background:#2e7d32;color:#fff;border:none;cursor:pointer;">
+            ✔︎
+          </button>
+          <!-- Reset Review -->
+          <button id="resetReviewBtn" title="Restart review from zero" style="padding:0.25rem 0.5rem;font-size:0.85rem;border-radius:4px;
+                       background:#e57373;color:#fff;border:none;cursor:pointer;">
+            ⟲
+          </button>
+          <!-- ← add this: Audio toggle button -->
+          <button id="audioToggleBtn" title="Toggle audio"
+            style="margin:0px; font-size:1.5rem; background:none; border:none; cursor:pointer;">
+            🔇
+          </button>
+        </div>
+      </div>
+
+      <div class="favourite" id="reviewFavouriteStar">&#9734;</div>
+      <div class="card-content" id="reviewContent">
+        <div class="question" id="question">Question</div>
+        <div class="answer" id="answer">Answer</div>
+        <div class="phrase" id="phrase">Phrase</div>
+      </div>
+      <div class="card-tags" id="reviewCardTags"></div>
+      <div class="detection-status" id="reviewDetectionStatus"></div>
+    </div>
+
+    <video class="camera-view" id="reviewCameraView" autoplay playsinline></video>
+
+    <!-- Bottom Menu (unchanged) -->
+    <div class="bottom-menu">
+      <div class="menu-item">
+        <button class="incrementTimer">△</button>
+        <div class="menu-center">
+          <span class="timerDisplay">2</span> sec
+        </div>
+        <button class="decrementTimer">▽</button>
+      </div>
+      <div class="menu-item">
+        <button class="incrementThreshold">△</button>
+        <div class="menu-center">
+          <span class="thresholdDisplay">20</span> dark
+        </div>
+        <button class="decrementThreshold">▽</button>
+      </div>
+      <div class="menu-item">
+        <button class="toggleAutoMode review">Enable Auto</button>
+      </div>
+      <div class="menu-item">
+        <button class="close-btn">Exit Review</button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Study Modal -->
+  <div id="studyModal" class="modal" style="display: none;">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-counter-top"><span id="studyCardCounter">1/100</span></div>
+        <div class="lot-counter">
+          <button id="studyPrevLot">‹</button>
+          <span id="studyLotCounter">1/14</span>
+          <button id="studyNextLot">›</button>
+        </div>
+      </div>
+      <div class="favourite" id="studyFavouriteStar">&#9734;</div>
+      <div class="card-content" id="studyContent">
+        <div class="question" id="studyQuestion">Question</div>
+        <div class="answer-pair">
+          <div class="answer correct" id="correctAnswer">Correct</div>
+          <div class="answer incorrect" id="incorrectAnswer">Incorrect</div>
+        </div>
+        <div class="phrase" id="studyPhrase">Phrase</div>
+      </div>
+      <div class="card-tags" id="studyCardTags"></div>
+      <div class="detection-status" id="studyDetectionStatus"></div>
+    </div>
+    <video class="camera-view" id="studyCameraView" autoplay playsinline></video>
+    <!-- bottom menu controls -->
+    <div class="bottom-menu">
+      <div class="menu-item"><button class="incrementTimer">△</button>
+        <div class="menu-center">
+          <span class="timerDisplay">2</span> sec
+        </div><button class="decrementTimer">▽</button>
+      </div>
+      <div class="menu-item"><button class="incrementThreshold">△</button>
+        <div class="menu-center">
+          <span class="thresholdDisplay">20</span> dark
+        </div><button class="decrementThreshold">▽</button>
+      </div>
+      <div class="menu-item"><button class="toggleAutoMode study">Enable Auto</button></div>
+      <div class="menu-item"><button class="close-btn">Exit Study</button></div>
+    </div>
+
+  </div>
+
+  <!-- Add Card Modal -->
+  <div id="addCardModal" class="modal" style="display:none;">
+    <div class="card add-card">
+      <h3>Add New Card</h3>
+
+      <details open>
+        <summary>Question</summary>
+        <textarea id="newQuestion" class="accordion-input" rows="3" placeholder="Enter question"></textarea>
+      </details>
+
+      <details>
+        <summary>Answer</summary>
+        <textarea id="newAnswer" class="accordion-input" rows="3" placeholder="Enter answer"></textarea>
+      </details>
+
+      <details>
+        <summary>Pronunciation</summary>
+        <input type="text" id="newPronunciation" class="accordion-input" placeholder="Enter pronunciation (optional)">
+      </details>
+
+      <details>
+        <summary>Phrase</summary>
+        <textarea id="newPhrase" class="accordion-input" rows="3" placeholder="Enter phrase (optional)"></textarea>
+      </details>
+
+      <details>
+        <summary>Tags</summary>
+        <div class="tags-row">
+          <input type="text" id="newTagInput" placeholder="Type tag and tap +">
+          <button id="addNewTagBtn">+</button>
+        </div>
+        <div id="newTagContainer" class="tags-row"></div>
+      </details>
+
+      <div class="modal-actions">
+        <button id="cancelCardBtn">Cancel</button>
+        <button id="saveCardBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Image‐Import Modal -->
+  <div id="imgImportModal" class="modal" style="display:none;">
+    <div class="card add-card" style="max-width:90%; margin:auto; background:#1f1f1f; padding:1rem; position:relative;">
+      <h3 style="color:#8989e9; text-align:center; margin-top:0;">Import Card from Image</h3>
+
+      <!-- 1) file picker -->
+      <input type="file" id="imgFileInput" accept="image/*" style="margin:1rem auto; display:block;" />
+
+      <!-- 2) preview & crop -->
+      <div style="width:100%; max-height:60vh; overflow:auto; text-align:center;">
+        <img id="toCrop" style="max-width:100%; display:none;" />
+      </div>
+
+      <!-- 3) controls -->
+      <div class="controls" style="display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; margin-top:1rem;">
+        <button id="cropQuestionBtn" data-field="question" disabled>Crop Question</button>
+        <button id="cropAnswerBtn" data-field="answer" disabled>Crop Answer</button>
+        <button id="cropPhraseBtn" data-field="phrase" disabled>Crop Phrase</button>
+        <button id="doneImport" disabled>Done</button>
+        <button id="cancelImport">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js" defer></script>
+  <script src="script.js" defer></script>
+
+
+</body>
+
+</html>
