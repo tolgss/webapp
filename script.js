@@ -473,47 +473,45 @@ async function renderCardTags(containerId) {
   const card     = filteredData[realIdx];
   const cardTags = normalizeTags(card.tag || []);
 
-  // 2a) Existing tags
   availableTags.forEach(tag => {
     const btn = document.createElement("button");
     btn.textContent = tag;
     btn.className = "tag-pill" + (cardTags.includes(tag) ? " selected" : "");
-    btn.addEventListener("click", async () => {
-      // toggle this tag
+    btn.addEventListener("click", () => {
+      // toggle this tag on the card
       if (cardTags.includes(tag)) {
         card.tag = cardTags.filter(t => t !== tag);
       } else {
         card.tag = [...cardTags, tag];
       }
-      await updateStorage();     // if you still persist
-      reviewShowCard();          // re-draw star + tags
+      reviewShowCard();  // re‐draw star + tags immediately
     });
     container.appendChild(btn);
   });
 
-  // 2b) “+ Add Tag”
   const addBtn = document.createElement("button");
-  addBtn.textContent = "+ Add Tag";
-  addBtn.className = "tag-pill add-tag";
-  addBtn.addEventListener("click", async () => {
-    const raw = prompt("Enter new tag name:");
-    if (!raw) return;
-    const norm = raw.trim().replace(/\s+/g, "-").toLowerCase();
+addBtn.textContent = "+ Add Tag";
+addBtn.className = "tag-pill add-tag";
+addBtn.addEventListener("click", () => {
+  const raw = prompt("Enter new tag name:");
+  if (!raw) return;
+  const norm = raw.trim().replace(/\s+/g, "-").toLowerCase();
 
-    // attach to card
-    card.tag = normalizeTags(card.tag || []);
-    if (!card.tag.includes(norm)) card.tag.push(norm);
+  // attach to this card
+  card.tag = normalizeTags(card.tag || []);
+  if (!card.tag.includes(norm)) {
+    card.tag.push(norm);
+  }
 
-    // add globally
-    if (!availableTags.includes(norm)) {
-      availableTags.push(norm);
-      showTagFilters();  // so your filters update immediately
-    }
+  // add globally for filters
+  if (!availableTags.includes(norm)) {
+    availableTags.push(norm);
+    showTagFilters();  // update filter list
+  }
 
-    await updateStorage();
-    reviewShowCard();
-  });
-  container.appendChild(addBtn);
+  reviewShowCard();   // re‐draw star + tags immediately
+});
+container.appendChild(addBtn);
 }
 
 // 2) studyShowCard — show question, answers, star & tags, then counters
@@ -1714,7 +1712,3 @@ function playAudioViaWebAudio(base64, onEnded) {
     }
   );
 }
-
-
-
-
