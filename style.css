@@ -362,19 +362,28 @@ select:hover {
   text-align: center;
 }
 
+/* Shared phrase styling */
 #reviewModal .phrase,
 #studyModal .phrase {
-  font-size: 1.2rem;
+  font-size: 1.2rem;           /* adjust per modal below */
   margin: 0.25rem 0;
   color: #bbbbbb;
   text-align: center;
+
+  /* scrolling when too tall */
+  max-height: 4rem;            /* change this to whatever height you need */
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  padding-right: 0.5rem;       /* room for scrollbar */
+  box-sizing: border-box;
 }
 
+/* Optionally override the font-size in study modal */
 #studyModal .phrase {
   font-size: 1rem;
-  max-height: 4rem;
-  overflow-y: auto;
 }
+
 
 .question-highlight {
   color: #6ecffc;
@@ -532,8 +541,8 @@ select:hover {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  gap: 0.25rem;
-  padding: 0.5rem 0.75rem;
+  /*gap: 0.25rem;*/
+  padding: 0.2rem 0.2rem;
   background-color: #1f1f1f;
   border-top: 1px solid #333;
   border-radius: 8px 8px 0 0;
